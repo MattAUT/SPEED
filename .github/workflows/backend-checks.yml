@@ -1,11 +1,11 @@
-name: Frontend Checks
+name: Backend Checks
 
 on: push
 
 jobs:
   # A workflow run is made up of one or more jobs that can run sequentially or in parallel
   # This workflow contains a single job called "build"
-  check-frontend:
+  check-backend:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -20,14 +20,10 @@ jobs:
           node-version: 14.*
 
       - name: Install dependencies
-        working-directory: frontend
+        working-directory: backend
         run: yarn install
 
-      - name: Run build script
-        working-directory: frontend
-        run:  yarn build
-
       - name: Run tests
-        working-directory: frontend
-        run:  yarn test  --no-watchman
+        working-directory: backend
+        run:  yarn test
 
