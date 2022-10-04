@@ -4,7 +4,7 @@ type Props = {
   data: Article[];
 };
 
-const Table = ({ data }: Props) => {
+const Table = ({data}: Props) => {
   return (
     <>
       {data.map((article) => (
