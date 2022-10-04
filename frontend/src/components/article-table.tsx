@@ -8,10 +8,12 @@ type Props = {
 
   const ArticleTable = ({ data }: Props) => {
     return (
+      
       <>
         {data.map((article) => (
-          <>
-<tr>
+          
+          <>        
+    <tr>
       <td>{article.title}</td>
       <td>{article.type}</td>
       <td>{article.authors.join(", ")}</td>
@@ -32,6 +34,14 @@ type Props = {
         </button>
       </td>
     </tr> 
+    <>
+</>
+{/* Sorting the articles by date */}
+    <button type="button" 
+        onClick={() => data.sort((a, b) => (a.year > b.year) ? 1 : -1)} 
+        >
+          Order By Date
+        </button>
           </>
 
         ))}

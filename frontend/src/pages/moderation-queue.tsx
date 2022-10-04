@@ -18,7 +18,7 @@ const ModerationQueue = () => {
 
     return (
     <div className="app-container">
-      {/* <form onSubmit={}>  for accepting or rejecting articles*/} 
+      <h1>Moderator View</h1>
         <table>
           <thead>
             <tr>
@@ -37,7 +37,6 @@ const ModerationQueue = () => {
                   />
           </tbody>
         </table>
-      {/* </form> */}
       </div>
     );
 }
