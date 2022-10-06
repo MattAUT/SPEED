@@ -1,6 +1,6 @@
 import { useTheme } from "@mui/material/styles";
 import { styled } from "goober";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 type ContainerProps = {
   $background: string;
@@ -36,14 +36,14 @@ const NavigationBar = () => {
     palette: { primary },
   } = useTheme();
 
+  const location = useLocation();
+
+
   return (
     <Container $background={primary.dark}>
       <h1>SPEED</h1>
       <LinksContainer>
-        <StyledNavLink to="/">Home</StyledNavLink>
-        <StyledNavLink to="/SEPractice">Select the Practice</StyledNavLink>
-        <StyledNavLink to="/SubmitArticle">Submit an Article</StyledNavLink>
-        <StyledNavLink to="/ModerationQueue">Review Articles</StyledNavLink>
+        {(location.pathname !== '/' ? <StyledNavLink to="/">Home</StyledNavLink> : null)}
       </LinksContainer>
     </Container>
   );
