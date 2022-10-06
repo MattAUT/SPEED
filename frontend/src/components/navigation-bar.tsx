@@ -11,6 +11,7 @@ const Container = styled<ContainerProps>("div")`
   width: 100vw;
   justify-content: space-between;
   background-color: ${({ $background }) => $background};
+  padding-left: 1.25%;
 `;
 
 const LinksContainer = styled("div")`

@@ -44,21 +44,21 @@ class Home extends Component {
           </LinkBox>
         </Link>
         
-        <Link to="./SubmitArticle" style={{textDecoration: "none", color: 'white'}}>
+        <Link to="./ModerationQueue" style={{textDecoration: "none", color: 'white'}}>
           <LinkBox>
             <FontAwesomeIcon icon={faClipboard} size="3x" style={{marginBottom: '5%'}} />
             Moderation
           </LinkBox>
         </Link>
         
-        <Link to="./SubmitArticle" style={{textDecoration: "none", color: 'white'}}>
+        <Link to="./AnalystQueue" style={{textDecoration: "none", color: 'white'}}>
           <LinkBox>
             <FontAwesomeIcon icon={faFlask} size="3x" style={{marginBottom: '5%'}} />
             Review
           </LinkBox>
         </Link>
         
-        <Link to="./SubmitArticle" style={{textDecoration: "none", color: 'white'}}>
+        <Link to="./SEPractice" style={{textDecoration: "none", color: 'white'}}>
           <LinkBox>
             <FontAwesomeIcon icon={faMagnifyingGlass} size="3x" style={{marginBottom: '5%'}} />
             Search
