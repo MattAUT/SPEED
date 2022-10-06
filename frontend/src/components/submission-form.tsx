@@ -55,6 +55,10 @@ const SubmissionForm = () => {
       currentErrors.push("Year cannot be empty");
     }
 
+    if (isNaN(+data.year)) {
+      currentErrors.push("Year must be a number");
+    }
+
     if (data.source === "") {
       currentErrors.push("Source cannot be empty");
     }
