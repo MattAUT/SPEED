@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Article } from "../types";
 
 type Props = {
@@ -7,13 +7,16 @@ type Props = {
 
 const ArticleTable = ({ data }: Props) => {
   const [sortedTable, setSortedTable] = useState(data);
-
-  useEffect(() => {
-    setSortedTable(data);
-  }, [data]);
+  const [ascOrDesc, setAscOrDesc] = useState(false);
 
   const sortByDate = () => {
-    setSortedTable(data.sort((a, b) => a.year - b.year))
+    if(ascOrDesc) {
+      setSortedTable(data.sort((a, b) => b.year - a.year))
+      setAscOrDesc(false)
+    } else {
+      setSortedTable(data.sort((a, b) => a.year - b.year))
+      setAscOrDesc(true);
+    }
   }
 
   const removeRow = (id: string) =>{
