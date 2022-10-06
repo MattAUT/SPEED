@@ -13,6 +13,8 @@
     "@types/node": "^16.11.56",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
+    "citation-js": "^0.6.4",
+    "fs": "^0.0.1-security",
     "goober": "^2.1.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
