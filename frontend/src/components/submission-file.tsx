@@ -27,11 +27,6 @@ const SuccessText = styled("p")`
 `;
 
 type FormValues = {
-    type: string,
-    citation: string
-};
-
-type CitationObject = {
   title: string;
   authors: string;
   year: string;
@@ -62,9 +57,9 @@ const SubmissionFile = () => {
     const currentErrors: string[] = [];
     setSuccess(false);
 
-    data.citation = fileContent;
+    data.title = fileContent;
 
-    if (data.citation === "") {
+    if (data.title === "") {
       currentErrors.push("Must add citation");
     }
     
@@ -79,41 +74,45 @@ const SubmissionFile = () => {
 
     let citationData = Cite.input(fileContent);
 
-    let submission: CitationObject = {title: "", authors: "", year: "", source: "", doi: "", type: ""};
-
-    submission.title = citationData[0].title;
+    data.title = citationData[0].title;
     //JSON structures for authors and year differ slightly if the article is from a conference
-    if(citationData[0].type === "paper-conference"){
-      let authors: string = "";
-      for(var author in citationData[0].author) {
-        authors += (citationData[0].author[author].literal + ",")
-      }
-      authors = authors.substring(0, authors.length - 1);
-      submission.authors = authors;
+    let authors: string = "";
+    let author;
 
-      submission.year = citationData[0]["event-date"]["date-parts"][0][0];
-    } else {
-      let authors: string = "";
+    if(citationData[0].author[0].given) {
       for(author in citationData[0].author) {
         authors += (citationData[0].author[author].given + " " + citationData[0].author[author].family + ",")
       }
       authors = authors.substring(0, authors.length - 1);
-      submission.authors = authors;
-      submission.year = citationData[0]["issued"]["date-parts"][0][0];
+      data.authors = authors;
+    } else {
+      for(author in citationData[0].author) {
+        authors += (citationData[0].author[author].literal + ",")
+      }
+      authors = authors.substring(0, authors.length - 1);
+      data.authors = authors;
     }
-    submission.source = citationData[0]["container-title"];
-    submission.doi = citationData[0].DOI;
-    submission.type = data.type;
+
+    if(citationData[0]["event-date"]) {
+      data.year = citationData[0]["event-date"]["date-parts"][0][0];
+    } else if(citationData[0]["issued"]) {
+      data.year = citationData[0]["issued"]["date-parts"][0][0];
+    } else {
+      data.year = citationData[0]["year"];
+    }
+
+    data.source = citationData[0]["container-title"];
+    data.doi = citationData[0].DOI;
 
     fetch(`${API_URI}/add`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ submission }),
+      body: JSON.stringify({ data }),
     });
     
     setErrors([]);
     setSuccess(true);
-    reset({ citation: "", type: ""});
+    reset({ title: "", authors: "", year: "", source: "", doi: "" });
   };
 
   return (
@@ -124,7 +123,7 @@ const SubmissionFile = () => {
       </Select>
       <Button variant="contained" component="label">
         Upload File
-        <input hidden accept=".bib,.ris" type="file" {...register("citation")} onChange={e => (e.target.files ? handleChangeFile(e.target.files[0]) : null)} />
+        <input hidden accept=".bib,.ris" type="file" {...register("title")} onChange={e => (e.target.files ? handleChangeFile(e.target.files[0]) : null)} />
       </Button>
       <Button variant="contained" onClick={handleSubmit(onSubmit)}>
         Submit
