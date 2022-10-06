@@ -7,5 +7,13 @@
     "postinstall-client": "cd frontend && npm install && npm run build",
     "postinstall-server": "cd backend && npm install",
     "start": "if [ $CLIENT_ENV ]; then cd frontend && npm run start; elif [ $SERVER_ENV ]; then cd backend && npm run start; fi"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-table": "^7.8.0",
+    "react-table-6": "^6.11.0",
+    "styled-components": "^5.3.6",
+    "yarn": "^1.22.19"
   }
 }

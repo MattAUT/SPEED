@@ -1,10 +1,11 @@
 export type ArticleType = "TDD" | "Mob Programming";
 
 export type Article = {
-  title: String;
+  _id: string;
+  title: string;
   type: ArticleType;
-  authors: String[];
-  source: String;
-  year: String;
-  doi: String;
+  authors: string[];
+  source: string;
+  year: number;
+  doi: string;
 };
