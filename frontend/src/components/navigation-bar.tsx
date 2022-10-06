@@ -42,6 +42,7 @@ const NavigationBar = () => {
         <StyledNavLink to="/">Home</StyledNavLink>
         <StyledNavLink to="/SEPractice">Select the Practice</StyledNavLink>
         <StyledNavLink to="/SubmitArticle">Submit an Article</StyledNavLink>
+        <StyledNavLink to="/ModerationQueue">Review Articles</StyledNavLink>
       </LinksContainer>
     </Container>
   );

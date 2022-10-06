@@ -5,7 +5,8 @@ const ArticleSchema = new mongoose.Schema({
   title: String,
   authors: [String],
   source: String,
-  year: String,
+  year: Number,
+
   doi: String,
   type: String,
 });
