@@ -1,7 +1,6 @@
-import { Button, MenuItem, Select, TextField } from "@mui/material";
-import { stripBasename } from "@remix-run/router";
+import { Button, MenuItem, Select } from "@mui/material";
 import { styled } from "goober";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const API_URI = process.env.REACT_APP_API_URL;
@@ -61,7 +60,6 @@ const SubmissionFile = () => {
 
   const onSubmit = (data: FormValues) => {
     const currentErrors: string[] = [];
-    const reader = new FileReader();
     setSuccess(false);
 
     data.citation = fileContent;
@@ -69,17 +67,17 @@ const SubmissionFile = () => {
     if (data.citation === "") {
       currentErrors.push("Must add citation");
     }
+    
+    if (data.type === "") {
+      currentErrors.push("Must select type");
+    }
 
     if (currentErrors.length > 0) {
       setErrors(currentErrors);
       return;
     }
 
-    console.log(data);
-
     let citationData = Cite.input(fileContent);
-
-    console.log(citationData);
 
     let submission: CitationObject = {title: "", authors: "", year: "", source: "", doi: "", type: ""};
 
@@ -96,7 +94,7 @@ const SubmissionFile = () => {
       submission.year = citationData[0]["event-date"]["date-parts"][0][0];
     } else {
       let authors: string = "";
-      for(var author in citationData[0].author) {
+      for(author in citationData[0].author) {
         authors += (citationData[0].author[author].given + " " + citationData[0].author[author].family + ",")
       }
       authors = authors.substring(0, authors.length - 1);
