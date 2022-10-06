@@ -1,15 +1,23 @@
+import { styled } from "goober";
 import React from "react";
 import SubmissionForm from "../components/submission-form";
 
-const SubmitArticle = () =>  {
-     return (
-      <div>
-        <h2>Submit Article</h2>
-            <p>This will be a form to allow submitters to submit an article for possible
-inclusion in our SEED repo.</p>
-            <SubmissionForm/>
-        </div>
-    );
-}
+const Container = styled("div")`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+`;
+
+const SubmitArticle = () => {
+  return (
+    <Container>
+      <h2>Submit Article</h2>
+
+      <SubmissionForm />
+    </Container>
+  );
+};
 
 export default SubmitArticle;

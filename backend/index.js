@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const connect = require("./config/connect");
 const queries = require("./config/queries");
+const mutations = require("./config/mutations");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,5 +18,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/fetch", queries);
+app.use("/add", mutations);
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
