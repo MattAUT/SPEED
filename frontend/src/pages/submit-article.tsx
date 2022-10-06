@@ -1,21 +1,27 @@
 import { styled } from "goober";
 import React from "react";
 import SubmissionForm from "../components/submission-form";
+import SubmissionFile from "../components/submission-file";
 
 const Container = styled("div")`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
-  align-items: center;
   width: 100vw;
 `;
 
 const SubmitArticle = () => {
   return (
     <Container>
-      <h2>Submit Article</h2>
+      <div>
+        <h2>Submit Article</h2>
 
-      <SubmissionForm />
+        <SubmissionForm />
+      </div>
+      <div>
+        <h2>Upload Article</h2>
+        <SubmissionFile />
+      </div>
     </Container>
   );
 };
