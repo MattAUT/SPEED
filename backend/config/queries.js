@@ -7,4 +7,5 @@ router.get("/", (req, res) => {
   Article.find({}).then((articles) => res.json(articles));
 });
 
+
 module.exports = router;
