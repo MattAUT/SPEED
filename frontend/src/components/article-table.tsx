@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Article } from "../types";
 
 type Props = {
@@ -10,18 +10,25 @@ const ArticleTable = ({ data }: Props) => {
   const [ascOrDesc, setAscOrDesc] = useState(false);
 
   const sortByDate = () => {
-    if(ascOrDesc) {
-      setSortedTable(data.sort((a, b) => b.year - a.year))
-      setAscOrDesc(false)
+    const newData: Article[] = JSON.parse(JSON.stringify(sortedTable));
+    if (ascOrDesc) {
+      newData.sort((a, b) => b.year - a.year);
+      setSortedTable(newData);
+      setAscOrDesc(false);
     } else {
-      setSortedTable(data.sort((a, b) => a.year - b.year))
+      newData.sort((a, b) => a.year - b.year);
+      setSortedTable(data);
       setAscOrDesc(true);
     }
-  }
+  };
 
-  const removeRow = (id: string) =>{
-    setSortedTable(data.filter((article) => article._id !== id))
-  }
+  useEffect(() => {
+    setSortedTable(data);
+  }, [data]);
+
+  const removeRow = (id: string) => {
+    setSortedTable(sortedTable.filter((article) => article._id !== id));
+  };
 
   // const approveRow = () =>{
   //   setSortedTable(data.filter(()))
@@ -30,7 +37,6 @@ const ArticleTable = ({ data }: Props) => {
   return (
     <>
       {sortedTable.map((article) => (
-
         <>
           <tr>
             <td>{article.title}</td>
@@ -42,26 +48,19 @@ const ArticleTable = ({ data }: Props) => {
             <td>
               <button
                 type="button"
-              // onClick={() => (approveRow)}
+                // onClick={() => (approveRow)}
               >
                 Approve
               </button>
-              <button type="button"
-              onClick={() => (removeRow(article._id))}
-              >
+              <button type="button" onClick={() => removeRow(article._id)}>
                 Reject
               </button>
             </td>
           </tr>
-          <>
-
-          </>
+          <></>
         </>
-
       ))}
-      <button type="button"
-        onClick={sortByDate}
-      >
+      <button type="button" onClick={() => sortByDate()}>
         Order By Date
       </button>
     </>
@@ -69,4 +68,3 @@ const ArticleTable = ({ data }: Props) => {
 };
 
 export default ArticleTable;
-
