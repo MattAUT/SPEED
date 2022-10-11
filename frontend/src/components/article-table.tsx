@@ -3,11 +3,14 @@ import { Article } from "../types";
 
 type Props = {
   data: Article[];
+  type: string;
 };
 
-const ArticleTable = ({ data }: Props) => {
+const ArticleTable = ({ data }: Props, { type }: Props) => {
   const [sortedTable, setSortedTable] = useState(data);
   const [ascOrDesc, setAscOrDesc] = useState(false);
+
+  console.log(type);
 
   const sortByDate = () => {
     const newData: Article[] = JSON.parse(JSON.stringify(sortedTable));
@@ -45,6 +48,8 @@ const ArticleTable = ({ data }: Props) => {
             <td>{article.source}</td>
             <td>{article.year}</td>
             <td>{article.doi}</td>
+            
+            {(type === "m" ?
             <td>
               <button
                 type="button"
@@ -56,6 +61,10 @@ const ArticleTable = ({ data }: Props) => {
                 Reject
               </button>
             </td>
+            :
+            null
+            )}
+
           </tr>
           <></>
         </>

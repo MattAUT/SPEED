@@ -11,7 +11,9 @@ const ModerationQueue = () => {
         fetch(`${API_URI}/fetch`)
           .then((res) => res.json())
           .then((data) => {
-            setData(data);
+            setData(data.filter((obj: any) => {
+              return obj.status === "Submitted";
+            }));
             console.log(data);
           });
       }, []);
@@ -34,6 +36,7 @@ const ModerationQueue = () => {
           <tbody>
                   <ArticleTable
                     data={data}
+                    type={"m"}
                   />
           </tbody>
         </table>

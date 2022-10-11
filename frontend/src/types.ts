@@ -1,4 +1,4 @@
-export type ArticleType = "TDD" | "Mob Programming";
+export type ArticleType = "nil" | "mob" | "tdd";
 
 export type Article = {
   _id: string;
@@ -8,4 +8,5 @@ export type Article = {
   source: string;
   year: number;
   doi: string;
+  status: string;
 };

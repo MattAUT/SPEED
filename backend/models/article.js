@@ -9,6 +9,7 @@ const ArticleSchema = new mongoose.Schema({
 
   doi: String,
   type: String,
+  status: String,
 });
 
 module.exports = Articles = mongoose.model("articles", ArticleSchema);
