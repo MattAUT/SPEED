@@ -1,5 +1,9 @@
 export type ArticleType = "nil" | "mob" | "tdd";
 
+export type SubmissionStatus = "Submitted" | "Pending" | "Approved" | "Rejected";
+
+export type RecommendedPractice = "x" | "y" | "n";
+
 export type Article = {
   _id: string;
   title: string;
@@ -8,5 +12,6 @@ export type Article = {
   source: string;
   year: number;
   doi: string;
-  status: string;
+  status: SubmissionStatus;
+  recommends: RecommendedPractice;
 };

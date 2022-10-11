@@ -15,6 +15,7 @@ router.post("/", (req, res) => {
     ...data,
     authors: data.authors.split(","),
     status: "Submitted",
+    recommends: 'x',
   });
   
   article.save(function(err) {

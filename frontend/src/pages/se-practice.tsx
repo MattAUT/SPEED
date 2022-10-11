@@ -1,24 +1,24 @@
-import { Table } from "@mui/material";
-import { styled } from "goober";
-import { Article } from "../types";
-import { useEffect, useState } from "react";
+//import { Table } from "@mui/material";
+//import { styled } from "goober";
+//import { Article } from "../types";
+//import { useState } from "react";
 
-const API_URI = process.env.REACT_APP_API_URL;
+//const API_URI = process.env.REACT_APP_API_URL;
 
 const SEPractice = () => {
-  const [data, setData] = useState<Article[]>([]);
+  //const [data, setData] = useState<Article[]>([]);
 
-  useEffect(() => {
+  /*const fetchData = () => {
     fetch(`${API_URI}/fetch`)
       .then((res) => res.json())
-      .then((data) => {
-        let filteredData = data.filter((obj: any) => {
+      .then((d) => {
+        let filteredData = d.filter((obj: any) => {
           return obj.status === "Accepted";
         })
         setData(filteredData);
-        console.log(filteredData);
       });
-  }, []);
+  }*/
+  
 
   return (
     <div>
