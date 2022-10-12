@@ -41,8 +41,8 @@ const SEPractice = () => {
     <Container>
       <h2>Select SE Practice to get evidence for the claimed benefits</h2>
       <FormContainer>
-      <Select defaultValue="" {...register("type")}>
-        <MenuItem value={""}>---</MenuItem>
+      <Select defaultValue=" " {...register("type")}>
+        <MenuItem value={" "}>Please pick an SE Practice</MenuItem>
         <MenuItem value={"mob"}>Mob Programming</MenuItem>
         <MenuItem value={"tdd"}>Test Driven Development</MenuItem>
       </Select>

@@ -189,7 +189,7 @@ const SortableArticles = ({ practice, label }: Props) => {
   );
 
   return (
-        <Table style={{maxWidth: '60%'}}>
+        <Table style={{maxWidth: '70%'}}>
           {(dataBody.length ? tableheader : null)}
           {dataBody}
         </Table>
