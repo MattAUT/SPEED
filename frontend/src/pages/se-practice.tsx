@@ -28,8 +28,14 @@ const SEPractice = () => {
     type: string;
   };
 
+  let practices = new Map<string, string>([
+    ["tdd", "Test-Driven Development"],
+    ["mob", "Mob Programming"]
+  ]);
+  
+
   const { register, watch } = useForm<FormValues>();
-  const watchType = watch("type", "mob");
+  const watchType = watch("type");
 
   return (
     <Container>
@@ -41,7 +47,7 @@ const SEPractice = () => {
       </Select>
       <br />
       </FormContainer>
-      <SortableArticles practice={watchType} />
+      <SortableArticles practice={watchType} label={practices.get(watchType)!} />
     </Container>
   );
 };

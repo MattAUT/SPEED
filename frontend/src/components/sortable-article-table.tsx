@@ -1,6 +1,6 @@
 import { Table, TableHead, TableRow, TableCell, TableSortLabel, Box } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import{ faQuestion, faCheck, faCross } from '@fortawesome/free-solid-svg-icons';
+import{ faQuestion, faCheck, faX } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from "react";
 import { styled } from "goober";
 import { visuallyHidden } from '@mui/utils';
@@ -19,6 +19,7 @@ type TableData = {
 
 type Props = {
     practice: string;
+    label: string;
   };
 
 //Table Sorting Functions from Material UI Demos
@@ -88,7 +89,7 @@ const headCells: readonly HeadCell[] = [
     id: 'recommends',
     numeric: false,
     disablePadding: false,
-    label: 'Practice Recommended?',
+    label: 'Practice?',
   },
 ];
 
@@ -96,10 +97,11 @@ interface EnhancedTableProps {
   onRequestSort: (event: React.MouseEvent<unknown>, property: keyof TableData) => void;
   order: Order;
   orderBy: string;
+  practice: string;
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const { order, orderBy, onRequestSort } =
+  const { order, orderBy, onRequestSort, practice } =
     props;
   const createSortHandler =
     (property: keyof TableData) => (event: React.MouseEvent<unknown>) => {
@@ -119,7 +121,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
             >
-              <h2>{headCell.label}</h2>
+              <h2>Recommends<br></br>{(headCell.label.includes("Practice") ? headCell.label.replace("Practice", practice) : headCell.label)}</h2>
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
@@ -140,7 +142,7 @@ const TextWrapCell = styled(TableCell)`
   text-align: center !important;
 `;
 
-const SortableArticles = ({ practice }: Props) => {
+const SortableArticles = ({ practice, label }: Props) => {
   const [tableData, setTableData] = useState<TableData[]>([]);
 
   useEffect(() => {
@@ -172,6 +174,7 @@ const SortableArticles = ({ practice }: Props) => {
       order={order}
       orderBy={orderBy}
       onRequestSort={handleRequestSort}
+      practice={label}
       />
 
   const dataBody = tableData.slice().sort(getComparator(order, orderBy)).map((article: any, index) => 
@@ -181,7 +184,7 @@ const SortableArticles = ({ practice }: Props) => {
       <TextWrapCell>{article.source}</TextWrapCell>
       <TextWrapCell>{article.year}</TextWrapCell>
       <TextWrapCell><a href="{article.doi}">{article.doi}</a></TextWrapCell>
-      <TextWrapCell>{(article.recommends === "x" ? <FontAwesomeIcon icon={faQuestion} size="4x" /> : (article.recommends === "y" ? <FontAwesomeIcon icon={faCheck} size="4x" /> : <FontAwesomeIcon icon={faCross} size="4x" />))}</TextWrapCell>
+      <TextWrapCell>{(article.recommends === "x" ? <FontAwesomeIcon icon={faQuestion} size="4x" /> : (article.recommends === "y" ? <FontAwesomeIcon style={{'color': 'limegreen'}} icon={faCheck} size="4x" /> : <FontAwesomeIcon style={{'color': 'red'}} icon={faX} size="4x" />))}</TextWrapCell>
     </TableRow>
   );
 
