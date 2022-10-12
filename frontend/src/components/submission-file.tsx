@@ -100,8 +100,13 @@ const SubmissionFile = () => {
       data.year = citationData[0]["year"];
     }
 
+    console.log(citationData[0])
+
     data.source = citationData[0]["container-title"];
-    data.doi = citationData[0].DOI;
+    if(!data.source) {
+      data.source = citationData[0]["_graph"][2]["data"]["BT"];
+    }
+    data.doi = (citationData[0].DOI ? citationData[0].DOI : citationData[0].id);
     if(data.doi.includes("https://doi.org/")){
       data.doi = data.doi.replace("https://doi.org/", "");
     }
