@@ -20,6 +20,7 @@ type TableData = {
 type Props = {
     practice: string;
     label: string;
+    years: number[];
   };
 
 //Table Sorting Functions from Material UI Demos
@@ -142,20 +143,27 @@ const TextWrapCell = styled(TableCell)`
   text-align: center !important;
 `;
 
-const SortableArticles = ({ practice, label }: Props) => {
+const NoArticles = styled("h1")`
+  display: block;
+  width: 100%;
+  text-align: center !important;
+`;
+
+const SortableArticles = ({ practice, label, years }: Props) => {
   const [tableData, setTableData] = useState<TableData[]>([]);
 
   useEffect(() => {
     fetch(`${API_URI}/fetch`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
+        let year1 = (years[0] < years[1] ? years[0] : years[1]);
+        let year2 = (years[0] > years[1] ? years[0] : years[1]);
         let filteredData = data.filter((obj: any) => {
-          return obj.status === "Submitted" && obj.type === practice;
+          return obj.status === "Approved" && obj.type === practice && (obj.year >= year1 && obj.year <= year2);
         })
         setTableData(filteredData);
       });
-  }, [practice]);
+  }, [practice, years]);
 
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<keyof TableData>("_id");
@@ -184,14 +192,19 @@ const SortableArticles = ({ practice, label }: Props) => {
       <TextWrapCell>{article.source}</TextWrapCell>
       <TextWrapCell>{article.year}</TextWrapCell>
       <TextWrapCell><a href="{article.doi}">{article.doi}</a></TextWrapCell>
-      <TextWrapCell>{(article.recommends === "x" ? <FontAwesomeIcon icon={faQuestion} size="4x" /> : (article.recommends === "y" ? <FontAwesomeIcon style={{'color': 'limegreen'}} icon={faCheck} size="4x" /> : <FontAwesomeIcon style={{'color': 'red'}} icon={faX} size="4x" />))}</TextWrapCell>
+      <TextWrapCell>{(article.recommends === "x" ? 
+        <FontAwesomeIcon icon={faQuestion} size="4x" /> :
+         (article.recommends === "y" ? 
+          <FontAwesomeIcon style={{'color': 'limegreen'}} icon={faCheck} size="4x" /> :
+          <FontAwesomeIcon style={{'color': 'red'}} icon={faX} size="4x" />))}
+      </TextWrapCell>
     </TableRow>
   );
 
   return (
         <Table style={{maxWidth: '70%'}}>
           {(dataBody.length ? tableheader : null)}
-          {dataBody}
+          {(dataBody.length ? dataBody : <NoArticles>No Articles Found</NoArticles>)}
         </Table>
   );
 };

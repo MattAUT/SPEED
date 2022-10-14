@@ -1,5 +1,6 @@
 import SortableArticles from "../components/sortable-article-table";
-import { Select, MenuItem } from "@mui/material";
+import React, { useState } from "react";
+import { Select, MenuItem, Slider } from "@mui/material";
 import { styled } from "goober";
 import { useForm } from "react-hook-form";
 
@@ -22,10 +23,15 @@ const FormContainer = styled("div")`
   }
   `;
 
+  function valuetext(value: number) {
+    return `${value}`;
+  }
+
 const SEPractice = () => {
   
   type FormValues = { 
     type: string;
+    years: number[];
   };
 
   let practices = new Map<string, string>([
@@ -33,22 +39,37 @@ const SEPractice = () => {
     ["mob", "Mob Programming"]
   ]);
   
+  const [value, setValue] = useState<number[]>([1900, new Date().getFullYear()]);
+
+  const handleChange = (event: Event, newValue: number | number[]) => {
+    setValue(newValue as number[]);
+  };
 
   const { register, watch } = useForm<FormValues>();
   const watchType = watch("type");
 
   return (
     <Container>
-      <h2>Select SE Practice to get evidence for the claimed benefits</h2>
       <FormContainer>
+      <h2>Select SE Practice to get evidence for the claimed benefits</h2>
       <Select defaultValue=" " {...register("type")}>
         <MenuItem value={" "}>Please pick an SE Practice</MenuItem>
         <MenuItem value={"mob"}>Mob Programming</MenuItem>
         <MenuItem value={"tdd"}>Test Driven Development</MenuItem>
-      </Select>
+      </Select>      
+      <h2>Select year range to search</h2>
+      <Slider
+        getAriaLabel={() => ''}
+        min={1900}
+        max={new Date().getFullYear()}
+        value={value}
+        onChange={handleChange}
+        valueLabelDisplay="auto"
+        getAriaValueText={valuetext}
+      />
       <br />
       </FormContainer>
-      <SortableArticles practice={watchType} label={practices.get(watchType)!} />
+      <SortableArticles practice={watchType} label={practices.get(watchType)!} years={value} />
     </Container>
   );
 };
