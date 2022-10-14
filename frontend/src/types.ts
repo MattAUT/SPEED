@@ -1,7 +1,14 @@
 export type ArticleType = "nil" | "mob" | "tdd";
-
-export type SubmissionStatus = "Submitted" | "Pending" | "Approved" | "Rejected";
-
+export const ArticleTypeMap = {
+  nil: "NIL",
+  mob: "Mob Programming",
+  tdd: "Test Driven Development",
+};
+export type SubmissionStatus =
+  | "Submitted"
+  | "Pending"
+  | "Approved"
+  | "Rejected";
 export type RecommendedPractice = "x" | "y" | "n";
 
 export type Article = {
