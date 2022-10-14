@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import Home from "./pages/home";
 import SEPractice from "./pages/se-practice";
@@ -12,13 +12,16 @@ import './style.css'
 setup(createElement);
 
 const App = () => {
+  const [userType, setUserType] = useState("");
+
+
   return (
     <Router>
       <div>
-        <NavigationBar />
+        <NavigationBar changeUser={(e: string) => setUserType(e)} />
         <div className="content">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home user={userType} />} />
             <Route path="/SEPractice" element={<SEPractice />} />
             <Route path="/SubmitArticle" element={<SubmitArticle />} />
             <Route path="/ModerationQueue" element={<ModerationQueue />}/>

@@ -1,7 +1,8 @@
-import { Button, MenuItem, Select } from "@mui/material";
+import { Button } from "@mui/material";
 import { styled } from "goober";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 const API_URI = process.env.REACT_APP_API_URL;
 
@@ -41,10 +42,12 @@ const SubmissionFile = () => {
   const [errors, setErrors] = useState<string[]>([]);
   const [success, setSuccess] = useState(false);
   const [fileContent, setFileContent] = useState<string>("")
+  const navigate = useNavigate();
 
   const handleFile = (e: any) => {
     const content = e.target.result;
     setFileContent(content);
+    e.target.value = null;
   }
 
   const handleChangeFile = (file: any) => {
@@ -60,11 +63,7 @@ const SubmissionFile = () => {
     data.title = fileContent;
 
     if (data.title === "") {
-      currentErrors.push("Must add citation");
-    }
-    
-    if (data.type === "") {
-      currentErrors.push("Must select type");
+      currentErrors.push("Must upload reference file");
     }
 
     if (currentErrors.length > 0) {
@@ -101,26 +100,49 @@ const SubmissionFile = () => {
       data.year = citationData[0]["year"];
     }
 
+    console.log(citationData[0])
+
     data.source = citationData[0]["container-title"];
-    data.doi = citationData[0].DOI;
+    if(!data.source) {
+      data.source = citationData[0]["_graph"][2]["data"]["BT"];
+    }
+    data.doi = (citationData[0].DOI ? citationData[0].DOI : citationData[0].id);
+    if(data.doi.includes("https://doi.org/")){
+      data.doi = data.doi.replace("https://doi.org/", "");
+    }
+
+    data.type = "nil";
 
     fetch(`${API_URI}/add`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ data }),
-    });
+    })
+      .then((response) => {
+        if (response.status === 403){
+          currentErrors.push("Article already exists!");
+          setSuccess(false);
+          reset({ title: "", authors: "", year: "", source: "", doi: "" });
+          setErrors(currentErrors);
+        } else if (response.status === 201){
+          setSuccess(true);
+          setErrors([]);
+          alert("Successfully submitted \"" + data.title + "\"!");
+          reset({ title: "", authors: "", year: "", source: "", doi: "" });
+          navigate("../");
+        }
+      });
     
-    setErrors([]);
-    setSuccess(true);
-    reset({ title: "", authors: "", year: "", source: "", doi: "" });
   };
 
   return (
     <FormContainer>
-      <Select defaultValue="tdd" {...register("type")}>
-        <MenuItem value={"mob"}>Mob Programming</MenuItem>
-        <MenuItem value={"tdd"}>Test Driven Development</MenuItem>
-      </Select>
+      {
+      //<Select defaultValue="tdd" {...register("type")}>
+        //<MenuItem value={"mob"}>Mob Programming</MenuItem>
+        //<MenuItem value={"tdd"}>Test Driven Development</MenuItem>
+      //</Select>
+      }
       <Button variant="contained" component="label">
         Upload File
         <input hidden accept=".bib,.ris" type="file" {...register("title")} onChange={e => (e.target.files ? handleChangeFile(e.target.files[0]) : null)} />

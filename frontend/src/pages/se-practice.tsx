@@ -1,26 +1,55 @@
-import Table from "../components/evidence-table";
-import { Article } from "../types";
-import { useEffect, useState } from "react";
+import SortableArticles from "../components/sortable-article-table";
+import { Select, MenuItem } from "@mui/material";
+import { styled } from "goober";
+import { useForm } from "react-hook-form";
 
-const API_URI = process.env.REACT_APP_API_URL;
+const Container = styled("div")`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 80vh;
+  align-items: center;
+  `;
+
+const FormContainer = styled("div")`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 500px;
+
+  & > * {
+    margin: 10px !important;
+  }
+  `;
 
 const SEPractice = () => {
-  const [data, setData] = useState<Article[]>([]);
+  
+  type FormValues = { 
+    type: string;
+  };
 
-  useEffect(() => {
-    fetch(`${API_URI}/fetch`)
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data);
-        console.log(data);
-      });
-  }, []);
+  let practices = new Map<string, string>([
+    ["tdd", "Test-Driven Development"],
+    ["mob", "Mob Programming"]
+  ]);
+  
+
+  const { register, watch } = useForm<FormValues>();
+  const watchType = watch("type");
 
   return (
-    <div>
+    <Container>
       <h2>Select SE Practice to get evidence for the claimed benefits</h2>
-      <Table data={data} />
-    </div>
+      <FormContainer>
+      <Select defaultValue=" " {...register("type")}>
+        <MenuItem value={" "}>Please pick an SE Practice</MenuItem>
+        <MenuItem value={"mob"}>Mob Programming</MenuItem>
+        <MenuItem value={"tdd"}>Test Driven Development</MenuItem>
+      </Select>
+      <br />
+      </FormContainer>
+      <SortableArticles practice={watchType} label={practices.get(watchType)!} />
+    </Container>
   );
 };
 

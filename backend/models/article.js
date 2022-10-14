@@ -6,9 +6,10 @@ const ArticleSchema = new mongoose.Schema({
   authors: [String],
   source: String,
   year: Number,
-
   doi: String,
   type: String,
+  status: String,
+  recommends: String,
 });
 
 module.exports = Articles = mongoose.model("articles", ArticleSchema);

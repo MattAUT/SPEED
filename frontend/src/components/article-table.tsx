@@ -1,13 +1,28 @@
+import MuiButton from "@mui/material/Button";
+import { styled } from "goober";
 import React, { useState, useEffect } from "react";
-import { Article } from "../types";
+import { Article, ArticleTypeMap } from "../types";
+import ModeratorDialog, { Action } from "./moderator-dialog";
 
 type Props = {
   data: Article[];
+  userType: "MODERATOR" | "ANALYST";
 };
 
-const ArticleTable = ({ data }: Props) => {
+const Button = styled(MuiButton)`
+  width: 150px;
+`;
+
+const ArticleTable = ({ data, userType }: Props) => {
   const [sortedTable, setSortedTable] = useState(data);
   const [ascOrDesc, setAscOrDesc] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogAction, setDialogAction] = useState(Action.APPROVE);
+  const [selectedId, setSelectedId] = useState("");
+
+  useEffect(() => {
+    setSortedTable(data.filter((article) => article.status === "Submitted"));
+  }, [data]);
 
   const sortByDate = () => {
     const newData: Article[] = JSON.parse(JSON.stringify(sortedTable));
@@ -22,47 +37,80 @@ const ArticleTable = ({ data }: Props) => {
     }
   };
 
-  useEffect(() => {
-    setSortedTable(data);
-  }, [data]);
-
-  const removeRow = (id: string) => {
-    setSortedTable(sortedTable.filter((article) => article._id !== id));
+  const removeArticleFromView = (_id: string) => {
+    setSortedTable(sortedTable.filter((article) => article._id !== _id));
   };
 
-  // const approveRow = () =>{
-  //   setSortedTable(data.filter(()))
-  // }
+  const handleApprove = (_id: string) => {
+    setDialogAction(Action.APPROVE);
+    setSelectedId(_id);
+    setDialogOpen(true);
+  };
+
+  const handleReject = (_id: string) => {
+    setDialogAction(Action.REJECT);
+    setSelectedId(_id);
+    setDialogOpen(true);
+  };
 
   return (
     <>
-      {sortedTable.map((article) => (
-        <>
-          <tr>
-            <td>{article.title}</td>
-            <td>{article.type}</td>
-            <td>{article.authors.join(", ")}</td>
-            <td>{article.source}</td>
-            <td>{article.year}</td>
-            <td>{article.doi}</td>
-            <td>
-              <button
-                type="button"
-                // onClick={() => (approveRow)}
-              >
-                Approve
-              </button>
-              <button type="button" onClick={() => removeRow(article._id)}>
-                Reject
-              </button>
-            </td>
-          </tr>
-          <></>
-        </>
-      ))}
-      <button type="button" onClick={() => sortByDate()}>
+      <ModeratorDialog
+        open={dialogOpen}
+        _id={selectedId}
+        action={dialogAction}
+        removeArticleFromView={removeArticleFromView}
+        handleClose={() => setDialogOpen(false)}
+      />
+      <Button variant="contained" onClick={() => sortByDate()}>
         Order By Date
-      </button>
+      </Button>
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Authors</th>
+            <th>Source</th>
+            <th>Year</th>
+            <th>DOI</th>
+            <th>Approval</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sortedTable.map((article) => (
+            <>
+              <tr>
+                <td>{article.title}</td>
+                <td>{ArticleTypeMap[article.type]}</td>
+                <td>{article.authors.join(", ")}</td>
+                <td>{article.source}</td>
+                <td>{article.year}</td>
+                <td>{article.doi}</td>
+
+                <td>
+                  {userType === "MODERATOR" ? (
+                    <>
+                      <Button
+                        variant="contained"
+                        onClick={() => handleApprove(article._id)}
+                      >
+                        Approve
+                      </Button>
+                      <Button
+                        variant="contained"
+                        onClick={() => handleReject(article._id)}
+                      >
+                        Reject
+                      </Button>
+                    </>
+                  ) : null}
+                </td>
+              </tr>
+            </>
+          ))}
+        </tbody>
+      </table>
     </>
   );
 };
