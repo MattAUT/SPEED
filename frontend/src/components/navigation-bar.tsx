@@ -1,6 +1,9 @@
+import React, { useEffect } from "react";
 import { useTheme } from "@mui/material/styles";
 import { styled } from "goober";
+import { Select, MenuItem } from "@mui/material";
 import { NavLink, useLocation } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 type ContainerProps = {
   $background: string;
@@ -31,19 +34,43 @@ const StyledNavLink = styled(NavLink as any)`
   }
 `;
 
-const NavigationBar = () => {
+type UserType = {
+  user: string;
+}
+
+type Props = {
+  changeUser: (usertype: string) => void;
+};
+
+const NavigationBar = ({changeUser}: Props) => {
   const {
     palette: { primary },
   } = useTheme();
 
   const location = useLocation();
 
+  const { register, watch } = useForm<UserType>();
+
+  const watchUser = watch("user");
+
+  useEffect(() => {
+    changeUser(watchUser);
+  }, [changeUser, watchUser])
 
   return (
     <Container $background={primary.dark}>
       <h1>SPEED</h1>
       <LinksContainer>
-        {(location.pathname !== '/' ? <StyledNavLink to="/">Home</StyledNavLink> : null)}
+        {(
+          location.pathname !== '/' ? 
+          <StyledNavLink to="/">Home</StyledNavLink> : 
+          <Select defaultValue="user" {...register("user")}>
+            <MenuItem value={"user"}>User</MenuItem>
+            <MenuItem value={"moderator"}>Moderator</MenuItem>
+            <MenuItem value={"analyst"}>Analyst</MenuItem>
+          </Select>
+        )}
+      
       </LinksContainer>
     </Container>
   );

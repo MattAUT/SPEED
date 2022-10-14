@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPencil, faClipboard, faFlask } from '@fortawesome/free-solid-svg-icons';
 import { styled } from "goober";
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 const HomeContainer = styled("div")`
@@ -33,31 +33,39 @@ const LinkBox = styled("div")`
   background-color: #2b2b2b;
 `;
 
-class Home extends Component {
-  render() {
-    return (
-      <HomeContainer>
-        <Link to="./SubmitArticle" style={{textDecoration: "none", color: 'white'}}>
+
+
+type Props = {
+  user: string;
+};
+
+const Home = (user: Props) => {
+
+    const submitBox = 
+      <Link to="./SubmitArticle" style={{textDecoration: "none", color: 'white'}}>
           <LinkBox>
             <FontAwesomeIcon icon={faPencil} size="3x" style={{marginBottom: '5%'}} />
             Submit
           </LinkBox>
         </Link>
-        
+
+    const modBox = 
         <Link to="./ModerationQueue" style={{textDecoration: "none", color: 'white'}}>
           <LinkBox>
             <FontAwesomeIcon icon={faClipboard} size="3x" style={{marginBottom: '5%'}} />
             Moderation
           </LinkBox>
         </Link>
-        
+
+    const anaBox = 
         <Link to="./AnalystQueue" style={{textDecoration: "none", color: 'white'}}>
           <LinkBox>
             <FontAwesomeIcon icon={faFlask} size="3x" style={{marginBottom: '5%'}} />
             Review
           </LinkBox>
         </Link>
-        
+
+    const searchBox = 
         <Link to="./SEPractice" style={{textDecoration: "none", color: 'white'}}>
           <LinkBox>
             <FontAwesomeIcon icon={faMagnifyingGlass} size="3x" style={{marginBottom: '5%'}} />
@@ -65,8 +73,14 @@ class Home extends Component {
           </LinkBox>
         </Link>
 
+    return (
+      <HomeContainer>
+        {submitBox}
+        {(user.user === "moderator" || user.user === "analyst" ? modBox : null)}
+        {(user.user === "analyst" ? anaBox : null)}
+        {searchBox}
       </HomeContainer>
     );
   }
-}
+
 export default Home;

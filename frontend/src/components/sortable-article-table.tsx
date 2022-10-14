@@ -149,10 +149,10 @@ const SortableArticles = ({ practice, label }: Props) => {
     fetch(`${API_URI}/fetch`)
       .then((res) => res.json())
       .then((data) => {
+        console.log(data)
         let filteredData = data.filter((obj: any) => {
           return obj.status === "Submitted" && obj.type === practice;
         })
-        console.log(data)
         setTableData(filteredData);
       });
   }, [practice]);
