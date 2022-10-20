@@ -3,6 +3,7 @@ import { styled } from "goober";
 import React, { useState, useEffect } from "react";
 import { Article, ArticleTypeMap } from "../types";
 import ModeratorDialog, { Action } from "./moderator-dialog";
+import AnalystDialog, { AnalystAction } from "./analyst-dialog";
 
 type Props = {
   data: Article[];
@@ -18,11 +19,15 @@ const ArticleTable = ({ data, userType }: Props) => {
   const [ascOrDesc, setAscOrDesc] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogAction, setDialogAction] = useState(Action.APPROVE);
+  const [dialogAnalystAction, setDialogAnalystAction] = useState(AnalystAction.APPROVE);
+  const [selectedType, setSelectedType] = useState("");
   const [selectedId, setSelectedId] = useState("");
 
   useEffect(() => {
-    setSortedTable(data.filter((article) => article.status === "Submitted"));
-  }, [data]);
+    setSortedTable(data.filter((article) => article.status === (userType !== "MODERATOR" && userType !== "ANALYST" 
+    ? "Approved" : (userType === "MODERATOR" 
+    ? "Submitted" : "Pending"))));
+  }, [data, userType]);
 
   const sortByDate = () => {
     const newData: Article[] = JSON.parse(JSON.stringify(sortedTable));
@@ -47,6 +52,19 @@ const ArticleTable = ({ data, userType }: Props) => {
     setDialogOpen(true);
   };
 
+  const handleAnalystApprove = (_id: string, type: string) => {
+    setDialogAnalystAction(AnalystAction.APPROVE);
+    setSelectedId(_id);
+    setSelectedType(type);
+    setDialogOpen(true);
+  };
+
+  const handleAnalystReject = (_id: string) => {
+    setDialogAnalystAction(AnalystAction.REJECT);
+    setSelectedId(_id);
+    setDialogOpen(true);
+  };
+
   const handleReject = (_id: string) => {
     setDialogAction(Action.REJECT);
     setSelectedId(_id);
@@ -59,6 +77,14 @@ const ArticleTable = ({ data, userType }: Props) => {
         open={dialogOpen}
         _id={selectedId}
         action={dialogAction}
+        removeArticleFromView={removeArticleFromView}
+        handleClose={() => setDialogOpen(false)}
+      />
+      <AnalystDialog
+        open={dialogOpen}
+        _id={selectedId}
+        type={selectedType}
+        action={dialogAnalystAction}
         removeArticleFromView={removeArticleFromView}
         handleClose={() => setDialogOpen(false)}
       />
@@ -100,6 +126,23 @@ const ArticleTable = ({ data, userType }: Props) => {
                       <Button
                         variant="contained"
                         onClick={() => handleReject(article._id)}
+                      >
+                        Reject
+                      </Button>
+                    </>
+                  ) : null}
+
+                  {userType === "ANALYST" ? (
+                    <>
+                      <Button
+                        variant="contained"
+                        onClick={() => handleAnalystApprove(article._id, article.type)}
+                      >
+                        Approve
+                      </Button>
+                      <Button
+                        variant="contained"
+                        onClick={() => handleAnalystReject(article._id)}
                       >
                         Reject
                       </Button>
