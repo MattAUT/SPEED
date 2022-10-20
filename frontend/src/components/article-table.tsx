@@ -20,6 +20,7 @@ const ArticleTable = ({ data, userType }: Props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogAction, setDialogAction] = useState(Action.APPROVE);
   const [dialogAnalystAction, setDialogAnalystAction] = useState(AnalystAction.APPROVE);
+  const [selectedType, setSelectedType] = useState("");
   const [selectedId, setSelectedId] = useState("");
 
   useEffect(() => {
@@ -49,9 +50,10 @@ const ArticleTable = ({ data, userType }: Props) => {
     setDialogOpen(true);
   };
 
-  const handleAnalystApprove = (_id: string) => {
+  const handleAnalystApprove = (_id: string, type: string) => {
     setDialogAnalystAction(AnalystAction.APPROVE);
     setSelectedId(_id);
+    setSelectedType(type);
     setDialogOpen(true);
   };
 
@@ -79,6 +81,7 @@ const ArticleTable = ({ data, userType }: Props) => {
       <AnalystDialog
         open={dialogOpen}
         _id={selectedId}
+        type={selectedType}
         action={dialogAnalystAction}
         removeArticleFromView={removeArticleFromView}
         handleClose={() => setDialogOpen(false)}
@@ -131,7 +134,7 @@ const ArticleTable = ({ data, userType }: Props) => {
                     <>
                       <Button
                         variant="contained"
-                        onClick={() => handleAnalystApprove(article._id)}
+                        onClick={() => handleAnalystApprove(article._id, article.type)}
                       >
                         Approve
                       </Button>

@@ -1,5 +1,7 @@
 import { Button, MenuItem, Modal, Paper, Select, Typography } from "@mui/material";
 import { styled } from "goober";
+import { useForm } from "react-hook-form";
+
 
 const API_URI = process.env.REACT_APP_API_URL;
 
@@ -23,9 +25,29 @@ const StyledPaper = styled(Paper)`
   spacing: ;
 `;
 
+const Container = styled("div")`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 80vh;
+  align-items: center;
+  `;
+
+const FormContainer = styled("div")`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 500px;
+
+  & > * {
+    margin: 10px !important;
+  }
+  `;
+
 type Props = {
     open: boolean;
     _id: string;
+    type: string;
     action: AnalystAction;
     removeArticleFromView: (_id: string) => void;
     handleClose: () => void;
@@ -34,10 +56,18 @@ type Props = {
 const AnalystDialog = ({
     open,
     _id,
+    type,
     action,
     handleClose,
     removeArticleFromView,
 }: Props) => {
+
+    type FormValues = { 
+        type: string;
+      };
+
+    const { register } = useForm<FormValues>();
+
     const rejectArticle = () => {
         fetch(`${API_URI}/add/reject`, {
             method: "POST",
@@ -56,6 +86,12 @@ const AnalystDialog = ({
             body: JSON.stringify({ _id }),
         });
 
+        fetch(`${API_URI}/put/type`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ "type": type })
+        })
+
         removeArticleFromView(_id);
         handleClose();
     };
@@ -72,11 +108,16 @@ const AnalystDialog = ({
             }}
         >
             <StyledPaper>
-                <h2>Select SE Practice to get evidence for the claimed benefits</h2>
-                <Select defaultValue={" "}>Please pick an SE Practice
-                    <MenuItem value={"mob"}>Mob Programming</MenuItem>
-                    <MenuItem value={"tdd"}>Test Driven Development</MenuItem>
-                </Select>
+                <Container>
+                    <FormContainer>
+                        <h2>Select SE Practice to get evidence for the claimed benefits</h2>
+                        <Select defaultValue=" " {...register("type")}>
+                            <MenuItem value={" "}>Please pick an SE Practice</MenuItem>
+                            <MenuItem value={"mob"}>Mob Programming</MenuItem>
+                            <MenuItem value={"tdd"}>Test Driven Development</MenuItem>
+                        </Select>
+                    </FormContainer>
+                </Container>
                 <Typography
                     sx={{ marginBottom: 4 }}
                 >{`Are you sure you want to ${action} this article?`}</Typography>
