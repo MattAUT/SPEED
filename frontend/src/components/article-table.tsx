@@ -24,8 +24,10 @@ const ArticleTable = ({ data, userType }: Props) => {
   const [selectedId, setSelectedId] = useState("");
 
   useEffect(() => {
-    setSortedTable(data.filter((article) => article.status === "Submitted"));
-  }, [data]);
+    setSortedTable(data.filter((article) => article.status === (userType !== "MODERATOR" && userType !== "ANALYST" 
+    ? "Approved" : (userType === "MODERATOR" 
+    ? "Submitted" : "Pending"))));
+  }, [data, userType]);
 
   const sortByDate = () => {
     const newData: Article[] = JSON.parse(JSON.stringify(sortedTable));
