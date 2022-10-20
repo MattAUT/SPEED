@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "postinstall": "if [ $CLIENT_ENV ]; then npm run postinstall-client; elif [ $SERVER_ENV ]; then npm run postinstall-server; else echo no environment detected, please set CLIENT_ENV or SERVER_ENV; fi",
+    "postinstall": "if [ $CLIENT_ENV ]; then npm run postinstall-client && npm install -g serve; elif [ $SERVER_ENV ]; then npm run postinstall-server; else echo no environment detected, please set CLIENT_ENV or SERVER_ENV; fi",
     "postinstall-client": "cd frontend && npm install && npm run build",
     "postinstall-server": "cd backend && npm install",
-    "start": "if [ $CLIENT_ENV ]; then cd frontend && npm run start; elif [ $SERVER_ENV ]; then cd backend && npm run start; fi"
+    "start": "if [ $CLIENT_ENV ]; then cd frontend && serve -s build; elif [ $SERVER_ENV ]; then cd backend && npm run start; fi"
   },
   "dependencies": {
     "react": "^18.2.0",
