@@ -17,16 +17,29 @@ const Button = styled(MuiButton)`
 const ArticleTable = ({ data, userType }: Props) => {
   const [sortedTable, setSortedTable] = useState(data);
   const [ascOrDesc, setAscOrDesc] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogAction, setDialogAction] = useState(Action.APPROVE);
-  const [dialogAnalystAction, setDialogAnalystAction] = useState(AnalystAction.APPROVE);
+  const [moderatorDialogOpen, setModeratorDialogOpen] = useState(false);
+  const [analystDialogOpen, setAnalystDialogOpen] = useState(false);
+  const [dialogActionModerator, setDialogActionModerator] = useState(
+    Action.APPROVE
+  );
+  const [dialogAnalystAction, setDialogAnalystAction] = useState(
+    AnalystAction.APPROVE
+  );
   const [selectedType, setSelectedType] = useState("");
   const [selectedId, setSelectedId] = useState("");
 
   useEffect(() => {
-    setSortedTable(data.filter((article) => article.status === (userType !== "MODERATOR" && userType !== "ANALYST" 
-    ? "Approved" : (userType === "MODERATOR" 
-    ? "Submitted" : "Pending"))));
+    setSortedTable(
+      data.filter(
+        (article) =>
+          article.status ===
+          (userType !== "MODERATOR" && userType !== "ANALYST"
+            ? "Approved"
+            : userType === "MODERATOR"
+            ? "Submitted"
+            : "Pending")
+      )
+    );
   }, [data, userType]);
 
   const sortByDate = () => {
@@ -46,47 +59,47 @@ const ArticleTable = ({ data, userType }: Props) => {
     setSortedTable(sortedTable.filter((article) => article._id !== _id));
   };
 
-  const handleApprove = (_id: string) => {
-    setDialogAction(Action.APPROVE);
+  const handleModeratorApprove = (_id: string) => {
+    setDialogActionModerator(Action.APPROVE);
     setSelectedId(_id);
-    setDialogOpen(true);
+    setModeratorDialogOpen(true);
   };
 
   const handleAnalystApprove = (_id: string, type: string) => {
     setDialogAnalystAction(AnalystAction.APPROVE);
     setSelectedId(_id);
     setSelectedType(type);
-    setDialogOpen(true);
+    setAnalystDialogOpen(true);
   };
 
   const handleAnalystReject = (_id: string) => {
     setDialogAnalystAction(AnalystAction.REJECT);
     setSelectedId(_id);
-    setDialogOpen(true);
+    setModeratorDialogOpen(true);
   };
 
-  const handleReject = (_id: string) => {
-    setDialogAction(Action.REJECT);
+  const handleModeratorReject = (_id: string) => {
+    setDialogActionModerator(Action.REJECT);
     setSelectedId(_id);
-    setDialogOpen(true);
+    setAnalystDialogOpen(true);
   };
 
   return (
     <>
       <ModeratorDialog
-        open={dialogOpen}
+        open={moderatorDialogOpen}
         _id={selectedId}
-        action={dialogAction}
+        action={dialogActionModerator}
         removeArticleFromView={removeArticleFromView}
-        handleClose={() => setDialogOpen(false)}
+        handleClose={() => setModeratorDialogOpen(false)}
       />
       <AnalystDialog
-        open={dialogOpen}
+        open={analystDialogOpen}
         _id={selectedId}
         type={selectedType}
         action={dialogAnalystAction}
         removeArticleFromView={removeArticleFromView}
-        handleClose={() => setDialogOpen(false)}
+        handleClose={() => setAnalystDialogOpen(false)}
       />
       <Button variant="contained" onClick={() => sortByDate()}>
         Order By Date
@@ -119,13 +132,13 @@ const ArticleTable = ({ data, userType }: Props) => {
                     <>
                       <Button
                         variant="contained"
-                        onClick={() => handleApprove(article._id)}
+                        onClick={() => handleModeratorApprove(article._id)}
                       >
                         Approve
                       </Button>
                       <Button
                         variant="contained"
-                        onClick={() => handleReject(article._id)}
+                        onClick={() => handleModeratorReject(article._id)}
                       >
                         Reject
                       </Button>
@@ -136,7 +149,9 @@ const ArticleTable = ({ data, userType }: Props) => {
                     <>
                       <Button
                         variant="contained"
-                        onClick={() => handleAnalystApprove(article._id, article.type)}
+                        onClick={() =>
+                          handleAnalystApprove(article._id, article.type)
+                        }
                       >
                         Approve
                       </Button>
