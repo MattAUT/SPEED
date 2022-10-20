@@ -25,14 +25,6 @@ const StyledPaper = styled(Paper)`
   spacing: ;
 `;
 
-const Container = styled("div")`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 80vh;
-  align-items: center;
-  `;
-
 const FormContainer = styled("div")`
   display: flex;
   flex-direction: column;
@@ -86,10 +78,10 @@ const AnalystDialog = ({
             body: JSON.stringify({ _id }),
         });
 
-        fetch(`${API_URI}/put/type`, {
-            method: "PUT",
+        fetch(`${API_URI}/add/type`, {
+            method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ "type": type })
+            body: JSON.stringify({ _id })
         })
 
         removeArticleFromView(_id);
@@ -108,7 +100,6 @@ const AnalystDialog = ({
             }}
         >
             <StyledPaper>
-                <Container>
                     <FormContainer>
                         <h2>Select SE Practice to get evidence for the claimed benefits</h2>
                         <Select defaultValue=" " {...register("type")}>
@@ -117,10 +108,9 @@ const AnalystDialog = ({
                             <MenuItem value={"tdd"}>Test Driven Development</MenuItem>
                         </Select>
                     </FormContainer>
-                </Container>
                 <Typography
                     sx={{ marginBottom: 4 }}
-                >{`Are you sure you want to ${action} this article?`}</Typography>
+                >{`Are you sure you want to ${action} this article and set type to ${type}?`}</Typography>
                 <StyledButton
                     variant="contained"
                     sx={{ marginBottom: 2 }}
