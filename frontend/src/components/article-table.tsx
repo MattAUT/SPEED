@@ -5,6 +5,12 @@ import { Article, ArticleTypeMap } from "../types";
 import ModeratorDialog, { Action } from "./moderator-dialog";
 import AnalystDialog, { AnalystAction } from "./analyst-dialog";
 
+const StyledTable = styled("table")`
+  display: block;
+  overflow-y: auto;
+  height: 70vh;
+`;
+
 type Props = {
   data: Article[];
   userType: "MODERATOR" | "ANALYST";
@@ -75,13 +81,13 @@ const ArticleTable = ({ data, userType }: Props) => {
   const handleAnalystReject = (_id: string) => {
     setDialogAnalystAction(AnalystAction.REJECT);
     setSelectedId(_id);
-    setModeratorDialogOpen(true);
+    setAnalystDialogOpen(true);
   };
 
   const handleModeratorReject = (_id: string) => {
     setDialogActionModerator(Action.REJECT);
     setSelectedId(_id);
-    setAnalystDialogOpen(true);
+    setModeratorDialogOpen(true);
   };
 
   return (
@@ -104,7 +110,7 @@ const ArticleTable = ({ data, userType }: Props) => {
       <Button variant="contained" onClick={() => sortByDate()}>
         Order By Date
       </Button>
-      <table>
+      <StyledTable>
         <thead>
           <tr>
             <th>Title</th>
@@ -168,7 +174,7 @@ const ArticleTable = ({ data, userType }: Props) => {
             </>
           ))}
         </tbody>
-      </table>
+      </StyledTable>
     </>
   );
 };
