@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import { styled } from "goober";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { ArticleTypeMap } from "../types";
 
 const API_URI = process.env.REACT_APP_API_URL;
@@ -56,18 +55,11 @@ type Props = {
 const AnalystDialog = ({
   open,
   _id,
-  type,
   action,
   handleClose,
   removeArticleFromView,
 }: Props) => {
-  const [typeDisplayText, setTypeDisplayText] = useState("nil");
-
-  type FormValues = {
-    type: string;
-  };
-
-  const { register } = useForm<FormValues>();
+  const [type, setType] = useState("nil");
 
   const rejectArticle = () => {
     fetch(`${API_URI}/add/reject`, {
@@ -90,7 +82,7 @@ const AnalystDialog = ({
     fetch(`${API_URI}/add/type`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ _id }),
+      body: JSON.stringify({ _id, type }),
     });
 
     removeArticleFromView(_id);
@@ -113,25 +105,24 @@ const AnalystDialog = ({
           <h2>Select SE Practice to get evidence for the claimed benefits</h2>
           <Select
             defaultValue="nil"
-            {...register("type")}
-            onChange={(event) => setTypeDisplayText(event.target.value)}
+            onChange={(event) => setType(event.target.value)}
           >
             <MenuItem value={"nil"}>Please pick an SE Practice</MenuItem>
             <MenuItem value={"mob"}>Mob Programming</MenuItem>
             <MenuItem value={"tdd"}>Test Driven Development</MenuItem>
           </Select>
         </FormContainer>
-        {typeDisplayText !== "nil" && (
+        {type !== "nil" && (
           <Typography
             sx={{ marginBottom: 4 }}
           >{`Are you sure you want to ${action} this article and set type to ${
-            ArticleTypeMap[typeDisplayText as keyof typeof ArticleTypeMap]
+            ArticleTypeMap[type as keyof typeof ArticleTypeMap]
           }?`}</Typography>
         )}
         <StyledButton
           variant="contained"
           sx={{ marginBottom: 2 }}
-          disabled={typeDisplayText === "nil"}
+          disabled={type === "nil"}
           onClick={
             action === AnalystAction.APPROVE ? approveArticle : rejectArticle
           }

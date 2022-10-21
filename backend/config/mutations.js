@@ -53,4 +53,27 @@ router.post("/pending/", (req, res) => {
   });
 });
 
+router.post("/approve/", (req, res) => {
+  if (!req.body._id) {
+    return;
+  }
+  Article.updateOne({ _id: req.body._id }, { status: "Approved" }, (err) => {
+    if (err) {
+      console.log(err);
+    }
+  });
+});
+
+router.post("/type/", (req, res) => {
+  if (!req.body._id || !req.body.type) {
+    return;
+  }
+
+  Article.updateOne({ _id: req.body._id }, { type: req.body.type }, (err) => {
+    if (err) {
+      console.log(err);
+    }
+  });
+});
+
 module.exports = router;
